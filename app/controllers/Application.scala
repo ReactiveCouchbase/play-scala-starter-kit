@@ -26,7 +26,7 @@ object Application extends Controller with CouchbaseController {
   }
 
   // Usage of N1QL plugin
-  def findUserByEmail(email: String) = Action.async {
+  def findUserByEmail(email: String) = CouchbaseAction("default") { implicit bucket =>
     N1QL( s""" SELECT id, name, email FROM default WHERE email = '${email}' """ ).toList[User].map { users =>
       Ok(users.mkString(" | "))
     }
