@@ -8,7 +8,7 @@ import org.reactivecouchbase.play._
 import org.reactivecouchbase.CouchbaseRWImplicits.documentAsJsObjectReader
 import org.reactivecouchbase.CouchbaseRWImplicits.jsObjectToDocumentWriter
 import com.couchbase.client.protocol.views.{ComplexKey, Stale, Query}
-import net.spy.memcached.ops.OperationStatus
+import org.reactivecouchbase.client.OpResult
 
 case class User(id: String, name: String, email: String)
 
@@ -42,11 +42,11 @@ object User {
     bucket.find[JsObject]("users", "by_email")(query).map(_.headOption)
   }
 
-  def save(user: JsObject): Future[OperationStatus] = {
+  def save(user: JsObject): Future[OpResult] = {
     bucket.set[JsObject]((user \ "id").as[String], user)
   }
 
-  def remove(user: JsObject): Future[OperationStatus] = {
+  def remove(user: JsObject): Future[OpResult] = {
     bucket.delete((user \ "id").as[String])
   }
 }
